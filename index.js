@@ -18,7 +18,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
      await client.connect()
      console.log("mongoDb connect successfully")
      const database = client.db("liveChat");
-     const useCollection = database.collection("users")
+     const usersCollection = database.collection("users");
+    //   add to user database
+    app.put('/users', async (req, res)=>{
+        const user = req.body
+        const filter = {email: user.email};
+        console.log(filter)
+        const options = { upsert: true };
+        const updateDoc = {$set: user}
+        const result = await usersCollection.updateOne(filter, updateDoc, options)
+        res.json(result)
+       })
      }
      finally{
 
